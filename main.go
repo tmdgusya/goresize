@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"goresize/parse"
 	"image"
 	"image/jpeg"
 	_ "image/jpeg"
@@ -13,9 +14,9 @@ import (
 	"golang.org/x/image/draw"
 )
 
-func resizeImage(inputPath, outputPath string, width, height int) error {
+func resizeImage(r *parse.ResizedImageInfo) error {
 	// Open the input image file.
-	inputFile, err := os.Open(inputPath)
+	inputFile, err := os.Open(r.InputFileName)
 	if err != nil {
 		return err
 	}
@@ -28,10 +29,10 @@ func resizeImage(inputPath, outputPath string, width, height int) error {
 	}
 
 	// Create a new image with the desired dimensions.
-	newImg := resize(img, width, height)
+	newImg := resize(img, r.Width, r.Height)
 
 	// Create the output image file.
-	outputFile, err := os.Create(outputPath)
+	outputFile, err := os.Create(r.OutputFileName)
 	if err != nil {
 		return err
 	}
@@ -63,19 +64,14 @@ func main() {
 	height := flag.Int("h", 300, "height for resized image")
 	flag.Parse()
 
-	if *inputFile == "" {
-		panic(fmt.Errorf("you must write the input file path"))
+	information := &parse.ResizedImageInfo{
+		Width:          *width,
+		Height:         *height,
+		InputFileName:  *inputFile,
+		OutputFileName: *outputFile,
 	}
 
-	if *outputFile == "" {
-		panic(fmt.Errorf("you must write the output file path"))
-	}
-
-	if *width == 0 || *height == 0 {
-		panic(fmt.Errorf("you must write the width and height of resized iamge"))
-	}
-
-	err := resizeImage(*inputFile, *outputFile, *width, *height)
+	err := resizeImage(information)
 	if err != nil {
 		log.Fatal(err)
 	}

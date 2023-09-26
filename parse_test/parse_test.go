@@ -1,10 +1,11 @@
-package main
+package parse_test
 
 import (
+	"goresize/parse"
 	"testing"
 )
 
-func ShouldPanicWith(message string, f func() error, t *testing.T) {
+func shouldPanicWith(message string, f func() error, t *testing.T) {
 	defer func() {
 		err := recover().(error)
 
@@ -16,30 +17,30 @@ func ShouldPanicWith(message string, f func() error, t *testing.T) {
 }
 
 func TestPanicIfTheClientDidntTypeInputFilePath(t *testing.T) {
-	given := ResizedImageInfo{}
-	ShouldPanicWith("you must write the input file name", given.Validate, t)
+	given := parse.ResizedImageInfo{}
+	shouldPanicWith("you must write the input file name", given.Validate, t)
 }
 
 func TestPanicIfTheClientDidntTypeOutputFilePath(t *testing.T) {
-	given := ResizedImageInfo{
+	given := parse.ResizedImageInfo{
 		InputFileName: "input.jpeg",
 	}
-	ShouldPanicWith("you must write the output file name", given.Validate, t)
+	shouldPanicWith("you must write the output file name", given.Validate, t)
 }
 
 func TestPanicIfTheClientDidntTypeWidth(t *testing.T) {
-	given := ResizedImageInfo{
+	given := parse.ResizedImageInfo{
 		InputFileName:  "input.jpeg",
 		OutputFileName: "output.jpeg",
 	}
-	ShouldPanicWith("you must write the width of the resized image", given.Validate, t)
+	shouldPanicWith("you must write the width of the resized image", given.Validate, t)
 }
 
 func TestPanicIfTheClientDidntTypeHeight(t *testing.T) {
-	given := ResizedImageInfo{
+	given := parse.ResizedImageInfo{
 		InputFileName:  "input.jpeg",
 		OutputFileName: "output.jpeg",
 		Width:          300,
 	}
-	ShouldPanicWith("you must write the height of the resized image", given.Validate, t)
+	shouldPanicWith("you must write the height of the resized image", given.Validate, t)
 }
