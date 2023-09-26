@@ -3,7 +3,9 @@ package image
 import (
 	"fmt"
 	"golang.org/x/image/draw"
+	"goresize/parse"
 	"image"
+	"image/jpeg"
 	_ "image/jpeg"
 	_ "image/png"
 	"os"
@@ -36,4 +38,21 @@ func NewImageFrom(img image.Image, width, height int) image.Image {
 	draw.CatmullRom.Scale(newImg, newImg.Bounds(), img, img.Bounds(), draw.Over, nil)
 
 	return newImg
+}
+
+// EncodeImageFile You must close the output file
+func EncodeImageFile(resizedImage image.Image, r *parse.ResizedImageInfo) (f *os.File, err error) {
+	// Create the output image file.
+	outputFile, err := os.Create(r.OutputFileName)
+	if err != nil {
+		return nil, err
+	}
+
+	// Encode the resized image as JPEG.
+	err = jpeg.Encode(outputFile, resizedImage, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return outputFile, nil
 }
