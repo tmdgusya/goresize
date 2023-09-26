@@ -2,6 +2,7 @@ package image
 
 import (
 	"fmt"
+	"golang.org/x/image/draw"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
@@ -25,4 +26,14 @@ func DecodeFileToImage(f *os.File) (image.Image, error) {
 		return nil, err
 	}
 	return img, nil
+}
+
+func NewImageFrom(img image.Image, width, height int) image.Image {
+	// Create a new image with the desired dimensions.
+	newImg := image.NewRGBA(image.Rect(0, 0, width, height))
+
+	// Use the Draw function to resize the image.
+	draw.CatmullRom.Scale(newImg, newImg.Bounds(), img, img.Bounds(), draw.Over, nil)
+
+	return newImg
 }

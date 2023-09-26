@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	image2 "goresize/image"
 	"goresize/parse"
 	"image"
 	"image/jpeg"
@@ -70,6 +71,9 @@ func main() {
 		InputFileName:  *inputFile,
 		OutputFileName: *outputFile,
 	}
+
+	imageFile := image2.OpenImageFile(information.InputFileName)
+	decodedImage, err := image2.DecodeFileToImage(imageFile)
 
 	err := resizeImage(information)
 	if err != nil {
