@@ -27,7 +27,7 @@ func main() {
 	decodedImage, err := image2.DecodeFileToImage(imageFile)
 	resizedImage := image2.NewImageFrom(decodedImage, information.Width, information.Height)
 	resizedFile, err := image2.EncodeImageFile(resizedImage, information)
-	resizedFile.Close()
+	defer resizedFile.Close()
 
 	if err != nil {
 		log.Fatal(err)
