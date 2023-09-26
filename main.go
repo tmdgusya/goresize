@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"image"
 	"image/jpeg"
@@ -56,12 +57,25 @@ func resize(img image.Image, width, height int) image.Image {
 }
 
 func main() {
-	inputPath := "input.jpeg"   // Change this to your input image file path.
-	outputPath := "output.jpeg" // Change this to your output image file path.
-	width := 300                // Change this to your desired width.
-	height := 200               // Change this to your desired height.
+	inputFile := flag.String("i", "", "input file name")
+	outputFile := flag.String("o", "", "output file name")
+	width := flag.Int("w", 300, "width for resized image")
+	height := flag.Int("h", 300, "height for resized image")
+	flag.Parse()
 
-	err := resizeImage(inputPath, outputPath, width, height)
+	if *inputFile == "" {
+		panic(fmt.Errorf("you must write the input file path"))
+	}
+
+	if *outputFile == "" {
+		panic(fmt.Errorf("you must write the output file path"))
+	}
+
+	if *width == 0 || *height == 0 {
+		panic(fmt.Errorf("you must write the width and height of resized iamge"))
+	}
+
+	err := resizeImage(*inputFile, *outputFile, *width, *height)
 	if err != nil {
 		log.Fatal(err)
 	}
